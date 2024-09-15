@@ -1,6 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, ReactNode } from "react";
 
-const AuthContext = React.createContext({
+interface AuthContextProps {
+  login: (token: string) => void;
+  logout: () => void;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthContext = React.createContext<AuthContextProps>({
   login: () => {},
   logout: () => {},
 }); //初期値
@@ -9,7 +18,7 @@ export const useAuth = () => {
   return useContext(AuthContext); //useContextでAuthContextを返す
 };
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (token: string) => {
     localStorage.setItem("auth_token", token); //localStorageにtokenを保存
   };
