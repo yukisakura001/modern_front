@@ -4,7 +4,7 @@ import apiClient from "@/lib/apiClient";
 import { useRouter } from "next/router";
 
 const Signup = () => {
-  const [name, setName] = useState<string>("");
+  const [username, setUserame] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -15,7 +15,7 @@ const Signup = () => {
     //新規登録APIをここに書く
     try {
       await apiClient.post("/auth/register", {
-        name: name,
+        username: username,
         email: email,
         password: password,
       });
@@ -55,7 +55,7 @@ const Signup = () => {
                   type="text"
                   autoComplete="name"
                   required
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setUserame(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
