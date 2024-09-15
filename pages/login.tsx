@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
+import apiClient from "@/lib/apiClient";
+import { useRouter } from "next/router";
 
-const login = () => {
+const Login = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const router = useRouter(); //リダイレクトするための関数
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //新規登録APIをここに書く
+    try {
+      const response = await apiClient.post("/auth/login", {
+        email: email,
+        password: password,
+      });
+      const token = response.data.token;
+      console.log(token);
+      router.push("/"); //リダイレクト
+    } catch (e) {
+      alert("正しくありません");
+    }
+  };
+
   return (
     <div>
       <div
@@ -18,7 +41,7 @@ const login = () => {
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="email"
@@ -32,6 +55,7 @@ const login = () => {
                   type="email"
                   autoComplete="email"
                   required
+                  onChange={(e) => setEmail(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
@@ -48,6 +72,7 @@ const login = () => {
                   type="password"
                   autoComplete="current-password"
                   required
+                  onChange={(e) => setPassword(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
@@ -68,4 +93,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;
