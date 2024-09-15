@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import Head from "next/head";
 import apiClient from "@/lib/apiClient";
 import { useRouter } from "next/router";
+import { useAuth } from "@/context/auth";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const { login } = useAuth(); //AuthProviderのlogin関数を使う
 
   const router = useRouter(); //リダイレクトするための関数
 
@@ -18,7 +21,7 @@ const Login = () => {
         password: password,
       });
       const token = response.data.token;
-      console.log(token);
+      login(token); //AuthProviderのlogin関数を使う
       router.push("/"); //リダイレクト
     } catch (e) {
       alert("正しくありません");

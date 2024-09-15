@@ -19,6 +19,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  //childrenはこのタグの中にあるものを指す
   const login = async (token: string) => {
     localStorage.setItem("auth_token", token); //localStorageにtokenを保存
   };
