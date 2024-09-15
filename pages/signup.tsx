@@ -1,15 +1,29 @@
 import React, { useState } from "react";
 import Head from "next/head";
+import apiClient from "@/lib/apiClient";
+import { useRouter } from "next/router";
 
 const Signup = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    //新規登録APIをここに書く
-  };
-
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const router = useRouter(); //リダイレクトするための関数
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //新規登録APIをここに書く
+    try {
+      await apiClient.post("/auth/register", {
+        name: name,
+        email: email,
+        password: password,
+      });
+      router.push("/login"); //リダイレクト
+    } catch (e) {
+      alert("正しくありません");
+    }
+  };
 
   return (
     <div>
