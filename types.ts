@@ -12,4 +12,13 @@ export interface UserType {
   email: string;
   password: string;
   posts: PostType[];
+  profile: Profile;
+}
+
+export interface Profile {
+  id: number;
+  bio: string;
+  profileImageUrl: string;
+  userId: number;
+  user: UserType;
 }
