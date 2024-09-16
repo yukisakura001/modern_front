@@ -16,7 +16,7 @@ const Timeline = () => {
       setLatestPosts((prevPosts) => [newPost.data, ...prevPosts]);
       setPostText("");
     } catch (error) {
-      console.error(error);
+      alert("失敗しました");
     }
   };
 
