@@ -1,7 +1,13 @@
 import apiClient from "@/lib/apiClient";
-import React, { useContext, ReactNode, useEffect } from "react";
+import React, { useContext, ReactNode, useEffect, useState } from "react";
 
 interface AuthContextProps {
+  //AuthContextPropsの型を定義
+  user: null | {
+    id: number;
+    username: string;
+    email: string;
+  };
   login: (token: string) => void;
   logout: () => void;
 }
@@ -11,6 +17,7 @@ interface AuthProviderProps {
 }
 
 const AuthContext = React.createContext<AuthContextProps>({
+  user: null,
   login: () => {},
   logout: () => {},
 }); //初期値
@@ -21,22 +28,42 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   //childrenはこのタグの中にあるものを指す
+  const [user, setUser] = useState<null | {
+    id: number;
+    username: string;
+    email: string;
+  }>(null); //userの初期値をnullに設定。型はid,username,emailを持つオブジェクトかnull
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token"); //localStorageに保存されたtokenを取得
     if (token) {
-      login(token); //tokenがあればlogin関数を実行
+      apiClient.defaults.headers["Authorization"] = `Bearer ${token}`; //axiosのデフォルトヘッダーにtokenを設定
+      apiClient
+        .get("/users/find")
+        .then((response) => {
+          setUser(response.data.user); //ユーザー情報を取得 全体に共有するためにuseStateを使う
+        })
+        .catch((error) => {
+          console.error(error); //エラーが出た場合はコンソールにエラーを表示
+        });
     }
-    apiClient.defaults.headers["Authorization"] = `Bearer ${token}`; //axiosのデフォルトヘッダーにtokenを設定
   }, []);
 
   const login = async (token: string) => {
     localStorage.setItem("auth_token", token); //localStorageにtokenを保存
+    try {
+      apiClient.get("/users/find").then((response) => {
+        //ログインするときにユーザー情報を取得
+        setUser(response.data.user); //ユーザー情報を取得 全体に共有するためにuseStateを使う
+      });
+    } catch (error) {
+      console.error(error); //エラーが出た場合はコンソールにエラーを表示
+    }
   };
   const logout = () => {
     localStorage.removeItem("auth_token"); //localStorageのtokenを削除
   };
-  const value = { login, logout }; //valueにloginとlogoutを入れる
+  const value = { user, login, logout }; //valueにloginとlogoutを入れる
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>; //AuthProviderでvalueを渡す
 };
