@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const login = async (token: string) => {
     localStorage.setItem("auth_token", token); //localStorageにtokenを保存
+    apiClient.defaults.headers["Authorization"] = `Bearer ${token}`; //ここも設定しないとログイン後のリクエストでエラーが出る
     try {
       apiClient.get("/users/find").then((response) => {
         //ログインするときにユーザー情報を取得
