@@ -57,11 +57,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(response.data.user); //ユーザー情報を取得 全体に共有するためにuseStateを使う
       });
     } catch (error) {
-      console.error(error); //エラーが出た場合はコンソールにエラーを表示
+      alert(error);
     }
   };
   const logout = () => {
     localStorage.removeItem("auth_token"); //localStorageのtokenを削除
+    setUser(null); //ユーザー情報をnullにする
+    delete apiClient.defaults.headers["Authorization"]; //axiosのデフォルトヘッダーからtokenを削除
   };
   const value = { user, login, logout }; //valueにloginとlogoutを入れる
 
