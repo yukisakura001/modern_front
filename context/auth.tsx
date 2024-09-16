@@ -1,4 +1,5 @@
-import React, { useContext, ReactNode } from "react";
+import apiClient from "@/lib/apiClient";
+import React, { useContext, ReactNode, useEffect } from "react";
 
 interface AuthContextProps {
   login: (token: string) => void;
@@ -20,6 +21,15 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   //childrenはこのタグの中にあるものを指す
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token"); //localStorageに保存されたtokenを取得
+    if (token) {
+      login(token); //tokenがあればlogin関数を実行
+    }
+    apiClient.defaults.headers["Authorization"] = `Bearer ${token}`; //axiosのデフォルトヘッダーにtokenを設定
+  }, []);
+
   const login = async (token: string) => {
     localStorage.setItem("auth_token", token); //localStorageにtokenを保存
   };
