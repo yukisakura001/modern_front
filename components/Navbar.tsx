@@ -16,7 +16,7 @@ function Navbar() {
             {user ? (
               <>
                 <Link
-                  href="/profile${user.id}" // ユーザーのidを使ってプロフィールページに遷移
+                  href={`/profile/${user.id}`} // ユーザーのidを使ってプロフィールページに遷移
                   className="bg-white text-gray-900 py-2 px-3 rounded-lg font-medium"
                 >
                   プロフィール
