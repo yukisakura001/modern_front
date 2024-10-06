@@ -2,13 +2,16 @@
 
 import apiClient from "@/lib/apiClient";
 import { Profile, PostType } from "@/types";
+import { GetServerSidePropsContext } from "next";
 
 type Props = {
   profile: Profile;
   posts: PostType[];
 };
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const { userId } = context.query;
   try {
     const profileResponse = await apiClient.get(`/users/profile/${userId}`); //特定のユーザーのプロフィールを取得
